@@ -1,0 +1,150 @@
+---
+title: "Julia Project"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+source('http://psych.colorado.edu/~jclab/R/mcSummaryLm.R')
+
+library(knitr)
+library(car)
+library(psych) 
+if (!require(lmSupport)) {
+  install.packages('lmSupport')
+  library(lmSupport)
+}
+
+data <-read.csv("CountyResultsClean.csv", header=T)
+```
+
+#Difference Scores
+```{r}
+#Vote difference - Dems
+data$VoteDiff_Dems <- data$DemVotes - data$DemVotes2016
+
+#Vote difference - Reps
+data$VoteDiff_Reps <- data$RepVotes - data$RepVotes2016
+
+#Vote difference - third party
+data$VoteDiff_TP <- data$TV_THIRDPARTY - data$ ###is the ExLibGen catagory all of them?
+
+#Population
+data$PopChange <- data$population - data$population2016
+```
+
+#Demographic Models
+```{r}
+#Overall Vote Change:
+#Dems:
+DemChange <- lm(data$VoteDiff_Dems ~ 1)
+#Reps:
+RepChange <- lm(data$VoteDiff_Reps ~ 1)
+#TP:
+TPChange <- lm(data$VoteDiff_TP ~ 1)
+
+#Population Change Models
+#Democrat
+DemPopModel <- lm(data$VoteDiff_Dems ~ data$PopChange)
+mcSummary(DemPopModel)
+
+#Republican
+RepPopModel <- lm(data$VoteDiff_Reps ~ data$PopChange)
+mcSummary(RepPopModel)
+
+#ThirdParty
+TPPopModel <- lm(data$VoteDiff_TP ~ data$PopChange)
+mcSummary(TPPopModel)
+
+#Race/Ethnicity 2020 Model - White
+#Democrat
+DemWhiteModel <- lm(data$DemVotes ~ data$White_VA)
+mcSummary(DemWhiteModel)
+
+#Republican
+RepWhiteModel <- lm(data$RepVotes ~ data$White_VA)
+mcSummary(RepWhiteModel)
+
+#Third Party
+TPWhiteModel <- lm(data$TV_THIRDPARTY ~ data$White_VA)
+mcSummary(TPWhiteModel)
+
+#Race/Ethnicity 2020 Model - Hispanic
+#Democrat
+DemHispanicModel <- lm(data$DemVotes ~ data$Hispanic_VA)
+mcSummary(DemHispanicModel)
+
+#Republican
+RepHispanicModel <- lm(data$RepVotes ~ data$Hispanic_VA)
+mcSummary(RepHispanicModel)
+
+#Third Party
+TPHispanicModel <- lm(data$TV_THIRDPARTY ~ data$Hispanic_VA)
+mcSummary(TPHispanicModel)
+
+#Race/Ethnicity 2020 Model - Black
+#Democrat
+DemBlackModel <- lm(data$DemVotes ~ data$Black_VA)
+mcSummary(DemBlackModel)
+
+#Republican
+RepBlackModel <- lm(data$RepVotes ~ data$Black_VA)
+mcSummary(RepBlackModel)
+
+#Third Party
+TPBlackModel <- lm(data$TV_THIRDPARTY ~ data$Black_VA) 
+mcSummary(TPBlackModel)
+
+#Race/Ethnicity 2020 Model - Asian
+#Democrat
+DemAsianModel <- lm(data$DemVotes ~ data$Asian_VA)
+mcSummary(DemAsianModel)
+
+#Republican
+RepAsianModel <- lm(data$RepVotes ~ data$Asian_VA)
+mcSummary(RepAsianModel)
+
+#Third Party
+TPAsianModel <- lm(data$TV_THIRDPARTY ~ data$Asian_VA) 
+mcSummary(TPAsianModel)
+
+#Race/Ethnicity 2020 Model - AI
+#Democrat
+DemAIModel <- lm(data$DemVotes ~ data$AI_VA)
+mcSummary(DemAIModel)
+
+#Republican
+RepAIModel <- lm(data$RepVotes ~ data$AI_VA)
+mcSummary(RepAIModel)
+
+#Third Party
+TPAIModel <- lm(data$TV_THIRDPARTY ~ data$AI_VA) 
+mcSummary(RepAIModel)
+
+#All - does one race/ethnicity predict votes over and above the others?
+#Democrat
+DemREModel<- lm(data$DemVotes ~ data$White_VA + data$Black_VA + data$Asian_VA + data$AI_VA)
+mcSummary(DemREModel)
+
+#Republican
+RepREModel<- lm(data$RepVotes ~ data$White_VA + data$Black_VA + data$Asian_VA + data$AI_VA)
+mcSummary(RepREModel)
+
+#Third Party
+TPREModel<- lm(data$TV_THIRDPARTY ~ data$White_VA + data$Black_VA + data$Asian_VA + data$AI_VA)
+mcSummary(TPREModel)
+```
+
+#Church Models
+```{r}
+#CNumber of
+DemChurchModel <- lm(data$VoteDiff_Dems ~ data$churches)
+mcSummary(DemChurchModel)
+
+RepChurchModel <- lm(data$VoteDiff_Reps ~ data$churches)
+mcSummary(RepChurchModel)
+
+TPChurchModel <- lm(data$VoteDiff_TP ~ data$churches)
+mcSummary(TPChurchModel)
+```
